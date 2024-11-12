@@ -17,7 +17,8 @@ defmodule Felixir.Application do
       # Start a worker by calling: Felixir.Worker.start_link(arg)
       # {Felixir.Worker, arg},
       # Start to serve requests, typically the last entry
-      FelixirWeb.Endpoint
+      FelixirWeb.Endpoint,
+      {Absinthe.Subscription,FelixirWeb.Endpoint}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

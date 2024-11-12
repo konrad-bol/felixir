@@ -17,8 +17,26 @@ defmodule Felixir.Chat.Message do
       [%Message{}, ...]
 
   """
-  def list_messages(room_id,user_id) do
-    Repo.all(from(m in Message,where: m.room_id ==^room_id and m.user_id==^user_id, preload: [:user,:room]))
+  def list_messages(room_id, cursor \\ nil) do
+    limit = 10
+
+    case cursor do
+      nil ->
+        Repo.all(
+          from(m in Message, where: m.room_id == ^room_id,
+          limit: ^limit,
+          preload: [:user, :room])
+        )
+
+      cursor ->
+        Repo.all(
+          from(m in Message,
+            where: m.room_id == ^room_id and m.id > ^cursor,
+            limit: ^limit,
+            preload: [:user, :room]
+          )
+        )
+    end
   end
 
   @doc """
@@ -101,7 +119,12 @@ defmodule Felixir.Chat.Message do
   def change_message(%Message{} = message, attrs \\ %{}) do
     Message.changeset(message, attrs)
   end
+
   def delete_message_by_id(room_id, user_id, message_id) do
-    Repo.delete_all(from(r in Message, where: r.room_id == ^room_id and r.user_id == ^user_id and r.id==^message_id))
+    Repo.delete_all(
+      from(r in Message,
+        where: r.room_id == ^room_id and r.user_id == ^user_id and r.id == ^message_id
+      )
+    )
   end
 end
