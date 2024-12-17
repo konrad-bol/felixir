@@ -29,7 +29,7 @@ defmodule Felixir.Auth.User do
     |> validate_length(:password, min: 8,max: 30)
     |> validate_length(:name, min: 4,max: 30)
     |> validate_length(:username, min: 4,max: 30)
-    |>hash_password()
+    |> hash_password()
   end
   def login_changeset(attrs) do
     %User{}
